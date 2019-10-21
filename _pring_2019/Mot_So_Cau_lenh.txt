@@ -1,0 +1,782 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Windowform_Bai_moi_nhat
+{
+    public partial class Form1 : Form
+    {
+        string myConnStr = ConfigurationManager.ConnectionStrings["MyConn"].ToString();
+        public Form1()
+        {
+            InitializeComponent();
+            load_data();
+            load_Combobox_region();
+            load_Combobox_corparartion();
+        }
+        public void load_data()
+        {
+            SqlConnection con = new SqlConnection(myConnStr);
+            SqlDataAdapter da = new SqlDataAdapter("select lastname,m.phone_no,region_name,corp_name from corporation c,member m, region r where m.corp_no = c.corp_no and m.region_no = r.region_no", con);
+            DataTable tb = new DataTable();
+            da.Fill(tb);
+            dataGridView1.DataSource = tb;
+            dataGridView1.DataBindings.Clear();
+
+        }
+        public void load_Combobox_region()
+        {
+            SqlConnection con = new SqlConnection(myConnStr);
+            SqlDataAdapter da = new SqlDataAdapter("select * from region", con);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            comboBox1.DataSource = ds.Tables[0];
+            comboBox1.DisplayMember = "region_name";
+            comboBox1.ValueMember = "region_no";
+        }
+        public void load_Combobox_corparartion()
+        {
+            SqlConnection con = new SqlConnection(myConnStr);
+            SqlDataAdapter da = new SqlDataAdapter("select * from corporation", con);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            comboBox2.DataSource = ds.Tables[0];
+            comboBox2.DisplayMember = "corp_name";
+            comboBox2.ValueMember = "corp_no";
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int regi = Int32.Parse(comboBox1.SelectedValue.ToString());
+            int corp = Int32.Parse(comboBox2.SelectedValue.ToString());
+            SqlConnection con = new SqlConnection(myConnStr);
+            
+            SqlCommand cmd = new SqlCommand(@"INSERT INTO [dbo].[member]([lastname],[firstname],[middleinitial],[street],[city],[state_prov]
+           ,[country]
+           ,[mail_code]
+           ,[phone_no]
+           ,[photograph]
+           ,[issue_dt]
+           ,[expr_dt]
+           ,[region_no]
+           ,[corp_no]
+           ,[prev_balance]
+           ,[curr_balance]
+           ,[member_code])
+            VALUES
+           ('" + textBox1.Text + "', ' ', ' ' , ' ', ' ', ' ', ' ', ' ', '" + textBox2.Text + "', ' ', ' ', ' ', '" + regi + " ', '" + corp + " ', ' ', ' ',' ')", con);
+
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+
+            con.Close();
+            load_data();
+        }
+    }
+}
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <connectionStrings>
+    <add name="MyConn"
+         connectionString="Data Source=localhost;Initial Catalog=PRN292_19_Spring;Persist Security Info=True;User ID=lamntse05790;Password=123456789"
+         providerName="System.Data.SqlClient" />
+  </connectionStrings>
+</configuration>
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.Configuration;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace Lab4_2
+{
+
+    public partial class Register : System.Web.UI.Page
+    {
+        string connStr = WebConfigurationManager.ConnectionStrings["MyConn"].ConnectionString;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            
+                load_data();
+                load_data2();
+            
+          
+            
+        }
+        public void load_data()
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlDataAdapter da = new SqlDataAdapter("select * from tbl_Book", con);
+
+            DataTable tb = new DataTable();
+            da.Fill(tb);
+
+            GridView1.DataSource = tb;
+            GridView1.DataBind();
+        }
+        public void load_data2()
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlDataAdapter da = new SqlDataAdapter("select * from tbl_Copy", con);
+
+            DataTable tb = new DataTable();
+            da.Fill(tb);
+
+            GridView2.DataSource = tb;
+            GridView2.DataBind();
+        }
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(connStr);
+
+            SqlCommand cmd = new SqlCommand("insert into tbl_Book(Title,Author,Publisher,BookNumber) values('"
+                + TextBox1.Text + "','" + TextBox3.Text + "', '"
+                + TextBox2.Text + "',"
+                + Int32.Parse(TextBox4.Text) + ")", con);
+
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+
+            con.Close();
+            load_data();
+        }
+        protected void GridView2_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            var i = e.RowIndex;
+            string copyCode = GridView2.Rows[i].Cells[0].Text;
+            //TextBox1.Text = copyCode;
+            deleteByCopyCodeInReverve(copyCode);
+            SqlConnection con = new SqlConnection(connStr);
+            SqlCommand cmd = new SqlCommand("delete from tbl_Copy where CopyCode = " + copyCode, con);
+
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+            con.Close();
+            load_data2();
+        }
+        protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            int id = (int)GridView1.DataKeys[e.RowIndex].Value;
+            //TextBox1.Text = id.ToString();
+            List<DataRow> myList = getCopyCode(id);
+            TextBox1.Text = "";
+            foreach (DataRow s in myList)
+            {
+                //TextBox1.Text += s["CopyCode"].ToString();
+                deleteByCopyCodeInReverve(s["CopyCode"].ToString());
+            }
+            foreach (DataRow s in myList)
+            {
+                //TextBox1.Text += s["CopyCode"].ToString();
+                deleteByCopyCodeIntbl_Copy(s["CopyCode"].ToString());
+            }
+
+            SqlConnection con = new SqlConnection(connStr);
+            SqlCommand cmd = new SqlCommand("delete from tbl_Book where BookCode = " + id, con);
+
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+            con.Close();
+            load_data();
+        }
+        protected List<DataRow> getCopyCode(int bookCode)
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlDataAdapter da = new SqlDataAdapter("select * from tbl_Copy where BookCode = " + bookCode, con);
+            List<DataRow> myList = new List<DataRow>();
+            DataTable tb = new DataTable();
+            da.Fill(tb);
+            foreach (DataRow dr in tb.Rows) myList.Add(dr);
+
+            return myList;
+
+        }
+        protected List<DataRow> getReserveCopyCode(string copyCode)
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlDataAdapter da = new SqlDataAdapter("select * from tbl_ReserveCopy where CopyCode = " + copyCode, con);
+            List<DataRow> myList2 = new List<DataRow>();
+            DataTable tb2 = new DataTable();
+            da.Fill(tb2);
+            foreach (DataRow dr in tb2.Rows) myList2.Add(dr);
+
+            return myList2;
+
+        }
+        protected void deleteByCopyCodeIntbl_Copy(string copyCode)
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlCommand cmd = new SqlCommand("delete from tbl_Copy where CopyCode = " + copyCode, con);
+
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+            con.Close();
+            load_data2();
+        }
+        protected void deleteByCopyCodeInReverve(string copyCode)
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlCommand cmd = new SqlCommand("delete from tbl_ReserveCopy where CopyCode = " + copyCode, con);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+            load_data2();
+        }
+
+
+        protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            GridViewRow Row = ((GridViewRow)((Control)sender).Parent.Parent);
+            string id = GridView1.DataKeys[Row.RowIndex].Value.ToString();
+            TextBox5.Text = id;
+        }
+
+        protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GridViewRow Row = ((GridViewRow)((Control)sender).Parent.Parent);
+            string id = GridView1.DataKeys[Row.RowIndex].Value.ToString();
+            TextBox1.Text = id;
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(connStr);
+
+            SqlCommand cmd = new SqlCommand("insert into tbl_Copy(BookCode,CopyNumber,SequenceNumber,Type,Price) values("
+                + Int32.Parse(TextBox5.Text) + "," + Int32.Parse(TextBox7.Text) + ","
+                + Int32.Parse(TextBox6.Text) + ",'"
+                + TextBox8.Text + "',"
+                + Int32.Parse(TextBox9.Text) + ")", con);
+
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+
+            con.Close();
+            load_data2();
+        }
+}
+public void loadDroplist()
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlDataAdapter da = new SqlDataAdapter("select detail_id,detail_name,master_name from DummyDetail,DummyMaster where DummyDetail.master_id=DummyMaster.master_id", con);
+
+            DataTable tb = new DataTable();
+            da.Fill(tb);
+            DropDownList1.DataSource = tb;
+            DropDownList1.DataTextField = "master_name";
+            DropDownList1.DataValueField = "master_name";
+            DropDownList1.DataBind();
+        }
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.Configuration;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace WebFormBaiMoiNhat
+{
+    public partial class WebForm1 : System.Web.UI.Page
+    {
+        string myConnStr = WebConfigurationManager.ConnectionStrings["MyConn"].ToString();
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            //if (!Page.IsPostBack)
+            //{
+                load_data();
+                load_Combobox_region();
+                load_Combobox_corparartion();
+            //}
+        }
+        public void load_data()
+        {
+            SqlConnection con = new SqlConnection(myConnStr);
+            SqlDataAdapter da = new SqlDataAdapter("select lastname,m.phone_no,region_name,corp_name from corporation c,member m, region r where m.corp_no = c.corp_no and m.region_no = r.region_no", con);
+            DataTable tb = new DataTable();
+            da.Fill(tb);
+            GridView1.DataSource = tb;
+            GridView1.DataBind();
+
+        }
+        public void load_Combobox_region()
+        {
+            SqlConnection con = new SqlConnection(myConnStr);
+            SqlDataAdapter da = new SqlDataAdapter("select * from region", con);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            DropDownList1.DataSource = ds.Tables[0];
+            DropDownList1.DataTextField = "region_name";
+            DropDownList1.DataValueField = "region_no";
+            DropDownList1.DataBind();
+        }
+        public void load_Combobox_corparartion()
+        {
+            SqlConnection con = new SqlConnection(myConnStr);
+            SqlDataAdapter da = new SqlDataAdapter("select * from corporation", con);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            DropDownList2.DataSource = ds.Tables[0];
+            DropDownList2.DataTextField = "corp_name";
+            DropDownList2.DataValueField = "corp_no";
+            DropDownList2.DataBind();
+        }
+        protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            GridView1.PageIndex = e.NewPageIndex;
+            GridView1.DataBind();
+        }
+    }
+}
+
+//////////////////////Bai TestResult
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Windowform_Bai_moi_nhat
+{
+    public partial class TestResult : Form
+    {
+        string myConnStr = ConfigurationManager.ConnectionStrings["MyConn"].ToString();
+        public TestResult()
+        {
+            InitializeComponent();
+            load_data();
+        }
+        public void load_data()
+        {
+            SqlConnection con = new SqlConnection(myConnStr);
+            SqlDataAdapter da = new SqlDataAdapter("select * from TestResult", con);
+            DataTable tb = new DataTable();
+            da.Fill(tb);
+            dataGridView1.DataSource = tb;
+            dataGridView1.DataBindings.Clear();
+
+            textBox1.DataBindings.Clear();
+            textBox2.DataBindings.Clear();
+            textBox3.DataBindings.Clear();
+            textBox4.DataBindings.Clear();
+            textBox5.DataBindings.Clear();
+            dateTimePicker1.DataBindings.Clear();
+
+            textBox1.DataBindings.Add("Text", dataGridView1.DataSource, "StudentID");
+            textBox2.DataBindings.Add("Text", dataGridView1.DataSource, "StudentName");
+            textBox3.DataBindings.Add("Text", dataGridView1.DataSource, "Subject");
+            textBox4.DataBindings.Add("Text", dataGridView1.DataSource, "TestType");
+            textBox5.DataBindings.Add("Text", dataGridView1.DataSource, "Mark");
+            dateTimePicker1.DataBindings.Add("Text", dataGridView1.DataSource, "Date");
+
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(myConnStr);
+
+            SqlCommand cmd = new SqlCommand("insert into TestResult(StudentID,StudentName,Subject,TestType,Date,Mark) values('"
+                + textBox1.Text + "','" + textBox2.Text + "', '"
+                + textBox3.Text + "','"
+                + textBox4.Text + "','"
+                + dateTimePicker1.Value  + "','"
+                + textBox5.Text +
+                "')", con);
+
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+
+            con.Close();
+            load_data();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int row = Convert.ToInt32(dataGridView1.CurrentRow.Index);
+            string studentID = dataGridView1.Rows[row].Cells[0].Value.ToString();
+            //MessageBox.Show("" + bookCode);
+
+            SqlConnection con = new SqlConnection(myConnStr);
+
+            SqlCommand cmd = new SqlCommand("update TestResult set StudentName = '"
+                + textBox2.Text + "',Subject = '"
+                + textBox3.Text + "',TestType = '"
+                + textBox4.Text + "',Date = '"
+                + dateTimePicker1.Value + "',Mark = "
+                + float.Parse(textBox5.Text) + "where StudentID = '" + studentID + "'", con);
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+            con.Close();
+            load_data();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            int row = Convert.ToInt32(dataGridView1.CurrentRow.Index);
+            string bookCode = dataGridView1.Rows[row].Cells[0].Value.ToString();
+            //MessageBox.Show("" + bookCode );
+            DialogResult kq = MessageBox.Show("ban muon xoa khong ?", "tieu de", MessageBoxButtons.YesNo);
+            if (kq == System.Windows.Forms.DialogResult.Yes)
+            {
+                SqlConnection con = new SqlConnection(myConnStr);
+
+                SqlCommand cmd = new SqlCommand("delete from TestResult where StudentID = '" + textBox1.Text + "'", con);
+
+                con.Open();
+
+                cmd.ExecuteNonQuery();
+                con.Close();
+                load_data();
+            }
+        }
+    }
+}
+
+
+
+        public void loadCombobox()
+        {
+            //comboBox1.Items.Clear();
+            SqlConnection con = new SqlConnection(connStr);
+            con.Open();
+            SqlCommand ca = new SqlCommand("select BookCode, Title from tbl_Book", con);
+            SqlDataAdapter da = new SqlDataAdapter(ca);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            comboBox1.DataSource = ds.Tables[0];
+            comboBox1.DisplayMember = "Title";
+            comboBox1.ValueMember = "BookCode";
+        }
+
+        
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            s = comboBox1.SelectedValue.ToString();     
+        }
+
+   
+}
+
+
+///////////////////////////////Bai CourseRegistration chua hoàn thành cái edit
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Windowform_Bai_moi_nhat
+{
+    public partial class CourseRegistration : Form
+    {
+        string myConnStr = ConfigurationManager.ConnectionStrings["MyConn"].ToString();
+        public CourseRegistration()
+        {
+            InitializeComponent();
+            load_data();
+        }
+        public void load_data()
+        {
+            SqlConnection con = new SqlConnection(myConnStr);
+            SqlDataAdapter da = new SqlDataAdapter("select * from CourseRegistration", con);
+            DataTable tb = new DataTable();
+            da.Fill(tb);
+            dataGridView1.DataSource = tb;
+            dataGridView1.DataBindings.Clear();
+
+            TextBox textbox = new TextBox();
+
+            textBox1.DataBindings.Clear();
+            textBox2.DataBindings.Clear();
+            textBox3.DataBindings.Clear();
+            textBox4.DataBindings.Clear();
+            textBox5.DataBindings.Clear();
+            comboBox1.DataBindings.Clear();
+
+            textBox1.DataBindings.Add("Text", dataGridView1.DataSource, "StudentID");
+            textBox2.DataBindings.Add("Text", dataGridView1.DataSource, "StudentName");
+            textBox3.DataBindings.Add("Text", dataGridView1.DataSource, "Subject");
+            textBox4.DataBindings.Add("Text", dataGridView1.DataSource, "Time");
+            textBox5.DataBindings.Add("Text", dataGridView1.DataSource, "Note");
+            comboBox1.DataBindings.Add("Text", dataGridView1.DataSource, "Sex");
+            
+
+
+        }
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(myConnStr);
+
+            SqlCommand cmd = new SqlCommand("insert into CourseRegistration(StudentID,StudentName,Sex,Subject,Time,Note) values('"
+                + textBox1.Text + "','" + textBox2.Text + "', '"
+                + comboBox1.SelectedValue + "','"
+                + textBox3.Text + "','"
+                + textBox4.Text + "','"
+                + textBox5.Text +
+                "')", con);
+
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+
+            con.Close();
+            load_data();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int row = Convert.ToInt32(dataGridView1.CurrentRow.Index);
+            string studentID = dataGridView1.Rows[row].Cells[0].Value.ToString();
+            //MessageBox.Show("" + bookCode);
+            int bit2 = 0;
+            if (comboBox1.SelectedValue.ToString().Equals("True"))
+            {
+                bit2 = 1;
+            }
+             
+            SqlConnection con = new SqlConnection(myConnStr);
+
+            SqlCommand cmd = new SqlCommand("update CourseRegistration set StudentName = '"
+                + textBox2.Text + "',Subject = '"
+                + textBox3.Text + "',Time = '"
+                + textBox4.Text + "',Note = '"
+                + textBox5.Text + "',Sex = '"
+                + bit2 + "' where StudentID = '" + studentID + "'", con);
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+            con.Close();
+            load_data();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            int row = Convert.ToInt32(dataGridView1.CurrentRow.Index);
+            string bookCode = dataGridView1.Rows[row].Cells[0].Value.ToString();
+            //MessageBox.Show("" + bookCode );
+            DialogResult kq = MessageBox.Show("ban muon xoa khong ?", "tieu de", MessageBoxButtons.YesNo);
+            if (kq == System.Windows.Forms.DialogResult.Yes)
+            {
+                SqlConnection con = new SqlConnection(myConnStr);
+
+                SqlCommand cmd = new SqlCommand("delete from CourseRegistration where StudentID = '" + bookCode + "'", con);
+
+                con.Open();
+
+                cmd.ExecuteNonQuery();
+                con.Close();
+                load_data();
+            }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //if (comboBox1.SelectedValue.ToString().Equals("True"))
+            //{
+            //    textBox1.Text = "1";
+            //}else
+            //{
+            //    textBox1.Text = "0";
+            //}
+        }
+    }
+}
+
+
+///////////////////////////Lab 4 v? web khá d?y d?
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.Configuration;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace Lab4_2
+{
+    public partial class BorrowedCopy : System.Web.UI.Page
+    {
+        string connStr = WebConfigurationManager.ConnectionStrings["MyConn"].ConnectionString;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!Page.IsPostBack)
+            {
+                load_data();
+                load_data_reserve();
+                load_Droplist();
+            }
+           
+        }
+        private void load_data()
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM [tbl_Copy]", con);
+            DataTable tb = new DataTable();
+            da.Fill(tb);
+            GridView1.DataSource = tb;
+            GridView1.DataBind();
+        }
+        private void load_data_reserve()
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM [tbl_ReserveCopy]", con);
+            DataTable tb = new DataTable();
+            da.Fill(tb);
+            GridView2.DataSource = tb;
+            GridView2.DataBind();
+        }
+        private void load_Droplist()
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlCommand cmd = new SqlCommand("SELECT [MemberCode], [Name] FROM [tbl_Member]", con);
+            SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+            DataTable tb = new DataTable();
+            sqlAdapter.Fill(tb);
+            con.Open();
+            cmd.ExecuteNonQuery();
+
+            DropDownList1.DataSource = tb;
+            DropDownList1.DataValueField = "MemberCode";
+            DropDownList1.DataTextField = "Name";
+            DropDownList1.DataBind();
+
+            con.Close();
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlCommand cmd = new SqlCommand("INSERT INTO tbl_ReserveCopy(MemberCode,CopyCode,BorrowedNumber,BorrowedDate,FeeAmount,DueDate) VALUES('"
+                + DropDownList1.SelectedValue + "', " + Int32.Parse(TextBox4.Text) + ", "
+                + Int32.Parse(TextBox1.Text) + ", '" + Calendar1.SelectedDate.ToString() + "', " + Int32.Parse(TextBox1.Text) + ", '" + Calendar1.SelectedDate.ToString() + "')", con);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+            load_data();
+            load_data_reserve();
+            load_Droplist();
+        }
+        protected void ImageButton1_Click(object sender, ImageClickEventArgs e)
+        {
+            Response.Redirect("~/Register.aspx");
+        }
+
+        protected void ImageButton2_Click(object sender, ImageClickEventArgs e)
+        {
+            Response.Redirect("~/RegisterMember.aspx");
+        }
+
+        protected void ImageButton3_Click(object sender, ImageClickEventArgs e)
+        {
+            Response.Redirect("~/BorrowedCopy.aspx");
+        }
+        protected void GridView2_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            string ReserveCopyCode = GridView2.Rows[e.RowIndex].Cells[0].Text;
+            SqlConnection con = new SqlConnection(connStr);
+            SqlCommand cmd = new SqlCommand("DELETE FROM [tbl_ReserveCopy] WHERE [ReserveCopyCode] = " + ReserveCopyCode, con);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+            load_data();
+            load_data_reserve();
+            load_Droplist();
+        }
+        protected void deleteByCopyCodeInReverve(string copyCode)
+        {
+            SqlConnection con = new SqlConnection(connStr);
+            SqlCommand cmd = new SqlCommand("delete from tbl_ReserveCopy where CopyCode = " + copyCode, con);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+            load_data_reserve();
+        }
+        
+        protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            string id =  GridView1.Rows[e.RowIndex].Cells[1].Text;
+            //TextBox1.Text = id;
+            deleteByCopyCodeInReverve(id);
+
+            SqlConnection con = new SqlConnection(connStr);
+            SqlCommand cmd = new SqlCommand("delete from tbl_Copy where CopyCode = " + id, con);
+
+            con.Open();
+
+            cmd.ExecuteNonQuery();
+            con.Close();
+            load_data();
+            load_data_reserve();
+            load_Droplist();
+        }
+
+        protected void RadioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            GridViewRow Row = ((GridViewRow)((Control)sender).Parent.Parent);
+            string id = GridView1.Rows[Row.RowIndex].Cells[2].Text;
+            TextBox2.Text = id;
+            TextBox4.Text = GridView1.Rows[Row.RowIndex].Cells[1].Text;
+        }
+
+        protected void ImageButton1_Click1(object sender, ImageClickEventArgs e)
+        {
+            Response.Redirect("~/Register.aspx");
+        }
+
+        protected void ImageButton2_Click1(object sender, ImageClickEventArgs e)
+        {
+            Response.Redirect("~/RegisterMember.aspx");
+        }
+
+        protected void ImageButton3_Click1(object sender, ImageClickEventArgs e)
+        {
+            Response.Redirect("~/BorrowedCopy.aspx");
+        }
+    }
+}
+

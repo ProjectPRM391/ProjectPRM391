@@ -1,0 +1,54 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Generic
+{
+    class GenericSample<T>
+    {
+        private T[] array;
+
+        public GenericSample(int size)
+        {
+            array = new T[size + 1];
+        }
+
+        public T getItem(int index)
+        {
+            return array[index];
+        }
+
+        public void setItem(int index, T value)
+        {
+            array[index] = value;
+        }
+    }
+}
+
+
+
+
+///main
+GenericSample<int> intArray = new GenericSample<int>(5);
+
+            for(int c = 0; c < 5; c++)
+            {
+                intArray.setItem(c, c * 5);
+            }
+            for(int c = 0; c < 5; c++)
+            {
+                Console.WriteLine(intArray.getItem(c) + " ");
+            }
+            Console.WriteLine("");
+
+            GenericSample<char> charArray = new GenericSample<char>(5);
+            for (int c = 0; c < 5; c++)
+            {
+                charArray.setItem(c, (char)(c + 97));
+            }
+            for (int c = 0; c < 5; c++)
+            {
+                Console.WriteLine(charArray.getItem(c) + " ");
+            }
+            Console.ReadLine();
