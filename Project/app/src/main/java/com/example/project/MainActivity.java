@@ -2,7 +2,10 @@ package com.example.project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
