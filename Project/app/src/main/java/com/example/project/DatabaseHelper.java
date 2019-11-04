@@ -2,6 +2,7 @@ package com.example.project;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -59,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String CREATE_TABLE_CUSTOMER = "CREATE TABLE " + TBALE_CUSTOMER + " ("
-            + AccountName + " INTEGER PRIMARY KEY , " + CustomerName + " TEXT, " + Password + " TEXT, "
+            + AccountName + " TEXT , " + CustomerName + " TEXT, " + Password + " TEXT, "
             + DOB + " TEXT, " + Email + " TEXT, " + Role + " TEXT) ";
 
     private static final String CREATE_TABLE_STORY = "CREATE TABLE " + TBALE_STORY + " ("
@@ -82,7 +83,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-    public void insertCustomer(Customer customer) {
+    public long insertCustomer(Customer customer) {
         // cap quyen ghi CSDL cho bien database
         SQLiteDatabase database = this.getWritableDatabase();
 
@@ -96,7 +97,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Role, customer.getRole());
 
         // them vao CSDL
-        database.insert(TBALE_CUSTOMER, null, values);
+        long result = database.insert(TBALE_CUSTOMER, null, values);
+        return  result;
+
     }
 
     public void insertStory(Story story) {
@@ -185,9 +188,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DB_Name);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TBALE_CUSTOMER);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TBALE_STORY);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TBALE_CATEGORY);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TBALE_STORY_CATEGORY );
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TBALE_DETAIL_STORY );
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TBALE_RATE);
         Log.i(null,"Replace");
         // Recreate
         onCreate(sqLiteDatabase);
     }
+    public boolean checkAccountNameExist(String username, String password){
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select * from " +  TBALE_CUSTOMER + " where " + AccountName + " = '" + username + "'", null );
+            res.moveToFirst();
+            if (res.isAfterLast() == false) {
+                check = res.getString(res.getColumnIndex(AccountName));
+                if(check != ""){
+                    return true;
+                }
+            }
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return false;
+    }
+    public boolean checkAccountExist(String username, String password){
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_CUSTOMER + " where " + AccountName + " = '" + username + "'" + " AND " + Password + " = '" + password + "'", null );
+            res.moveToFirst();
+            while(res.isAfterLast() == false) {
+                check = res.getString(res.getColumnIndex(AccountName));
+                if(check != ""){
+                    return true;
+                }
+            }
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return false;
+    }
+
 }

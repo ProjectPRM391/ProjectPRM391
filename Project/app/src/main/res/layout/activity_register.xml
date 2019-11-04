@@ -43,7 +43,7 @@
                 android:text="Tên:" />
 
             <EditText
-                android:id="@+id/name"
+                android:id="@+id/customername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -59,10 +59,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:paddingLeft="15dp"
-                android:text="Tuổi:" />
+                android:text="Date" />
 
             <EditText
-                android:id="@+id/age"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -151,6 +151,7 @@
         android:id="@+id/Register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="registerCLick"
         android:text="Đăng kí"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
