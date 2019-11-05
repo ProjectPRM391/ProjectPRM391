@@ -301,7 +301,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return number;
     }
 
-    /*public List<Customer> getAllListStory(List<Customer> listStory ){
+    public List<Customer> getAllListCustomer(List<Customer> listStory ){
 
         try{
             String check = "";
@@ -309,17 +309,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_CUSTOMER  , null );
             if(res.moveToFirst()){
                 while(res.isAfterLast() == false) {
-                    int storyId = res.getInt(0);
-                    String storyName = res.getString(1);
-                    byte[] image  = res.getBlob(2);
-                    String accountName = res.getString(3);
-                    String descrition = res.getString(4);
-                    boolean state = res.getString(5) == "true" ? true : false ;
-                    int viewNumber = res.getInt(6);
-                    int number = getNumberOfChapterStory(storyId);
-                    int rate = getRateStory(storyId);
-                    Story story = new Story(storyId,storyName,image,accountName,descrition,state,viewNumber,number,rate);
-                    listStory.add(story);
+                     String accountName = res.getString(0);
+                     String customerName = res.getString(1);
+                     String password  = res.getString(2);
+                     String date = res.getString(3);
+                     String email =  res.getString(4);
+                     String role = res.getString(5);
+                     Customer customer = new Customer(accountName,customerName,password,date,email,role);
+                     listStory.add(customer);
                     res.moveToNext();
                 }
             }
@@ -329,7 +326,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             log.LogI("Error",e.toString());
         }
         return listStory;
-    }*/
+    }
 
     public List<Story> getStoryByName(List<Story> listStory, String s){
 
@@ -359,5 +356,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             log.LogI("Error",e.toString());
         }
         return listStory;
+    }
+
+    public  boolean isAdminOrNot(String accountName){
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_CUSTOMER +" WHERE "+AccountName+" = '"+ accountName +"'" , null );
+            if(res.moveToFirst()){
+                check = res.getString(5);
+                if(check.equalsIgnoreCase("admin")){
+                    return true;
+                }
+            }
+
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return false;
     }
 }

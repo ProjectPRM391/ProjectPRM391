@@ -25,7 +25,7 @@ public class Register extends AppCompatActivity {
         CUSTOMERNAME = (EditText) findViewById(R.id.customername);
         PASSWORD = (EditText) findViewById(R.id.password);
         DATE = (EditText) findViewById(R.id.date);
-        EMAIL = (EditText) findViewById(R.id.email);
+        EMAIL = (EditText) findViewById(R.id.aaa);
 
         databaseHelper = new DatabaseHelper(getApplicationContext());
     }

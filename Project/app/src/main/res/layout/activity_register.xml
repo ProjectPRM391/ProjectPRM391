@@ -40,7 +40,8 @@
                 android:layout_width="209dp"
                 android:layout_height="40dp"
                 android:paddingLeft="15dp"
-                android:text="Tên:" />
+                android:text="Tên:"
+                android:textSize="20dp"/>
 
             <EditText
                 android:id="@+id/customername"
@@ -59,7 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:paddingLeft="15dp"
-                android:text="Date" />
+                android:text="Date"
+                android:textSize="20dp"/>
 
             <EditText
                 android:id="@+id/date"
@@ -78,7 +80,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:paddingLeft="15dp"
-                android:text="Địa chỉ:" />
+                android:text="Địa chỉ:"
+                android:textSize="20dp"/>
 
             <EditText
                 android:id="@+id/address"
@@ -97,10 +100,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:paddingLeft="15dp"
-                android:text="E-mail:" />
+                android:text="E-mail:"
+                android:textSize="20dp"/>
 
             <EditText
-                android:id="@+id/email"
+                android:id="@+id/aaa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -116,7 +120,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:paddingLeft="15dp"
-                android:text="Tài khoản:" />
+                android:text="Tài khoản:"
+                android:textSize="20dp"/>
 
             <EditText
                 android:id="@+id/account"
@@ -136,14 +141,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:paddingLeft="15dp"
-                android:text="Mật khẩu:" />
+                android:text="Mật khẩu:"
+                android:textSize="20dp"/>
 
             <EditText
                 android:id="@+id/password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPassword" />
         </TableRow>
     </TableLayout>
 

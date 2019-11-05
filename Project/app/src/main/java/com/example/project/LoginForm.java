@@ -34,10 +34,17 @@ public class LoginForm extends AppCompatActivity {
         String password = PASSWORD.getText().toString();
 
         boolean check = false;
+        boolean admin = false;
         check = databaseHelper.checkAccountExist(accountName,password);
         if(check == true){
-            Intent intent = new Intent(this,Home.class);
-            startActivity(intent);
+            admin = databaseHelper.isAdminOrNot(accountName);
+            if(admin == true){
+                Intent intent = new Intent(this,ListCustomer.class);
+                startActivity(intent);
+            }else{
+                Intent intent = new Intent(this,Home.class);
+                startActivity(intent);
+            }
         }else{
             Toast.makeText(this,"false",Toast.LENGTH_LONG).show();
         }
