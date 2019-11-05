@@ -43,9 +43,9 @@ public class Register extends AppCompatActivity {
 
          boolean check = false;
          check = databaseHelper.checkAccountNameExist(accountName,password);
-         if(check == true){
+         if(check == false){
             databaseHelper.insertCustomer(customer);
-            Intent intent = new Intent(this,Register.class);
+            Intent intent = new Intent(this,LoginForm.class);
             startActivity(intent);
          }else{
             Toast.makeText(this,"false",Toast.LENGTH_LONG).show();

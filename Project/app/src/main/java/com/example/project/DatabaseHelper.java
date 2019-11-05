@@ -207,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Cursor res = sqLiteDatabase.rawQuery( "select * from " +  TBALE_CUSTOMER + " where " + AccountName + " = '" + username + "'", null );
             res.moveToFirst();
             if (res.isAfterLast() == false) {
-                check = res.getString(res.getColumnIndex(AccountName));
+                check = res.getString(0);
                 if(check != ""){
                     return true;
                 }
@@ -252,7 +252,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     String descrition = res.getString(4);
                     boolean state = res.getString(5) == "true" ? true : false ;
                     int viewNumber = res.getInt(6);
-                    Story story = new Story(storyId,storyName,image,accountName,descrition,state,viewNumber);
+                    int number = getNumberOfChapterStory(storyId);
+                    Story story = new Story(storyId,storyName,image,accountName,descrition,state,viewNumber,number);
                     listStory.add(story);
                     res.moveToNext();
                 }
@@ -263,6 +264,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             log.LogI("Error",e.toString());
         }
         return listStory;
+    }
+
+    public int getNumberOfChapterStory(int storyId){
+        int number = 0;
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select COUNT() from "+  TBALE_DETAIL_STORY  , null );
+            if(res.moveToFirst()){
+                number = res.getInt(0);
+            }
+
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return number;
     }
 
 }

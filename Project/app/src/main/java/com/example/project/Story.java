@@ -11,8 +11,9 @@ public class Story {
     public String descrition;
     public boolean state;
     public int viewNumber;
+    public int numberOfChapter;
 
-    public Story(int storyID, String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber) {
+    public Story(int storyID, String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber,int numberOfChapter) {
         this.storyID = storyID;
         this.storyName = storyName;
         this.image = image;
@@ -20,14 +21,24 @@ public class Story {
         this.descrition = descrition;
         this.state = state;
         this.viewNumber = viewNumber;
+        this.numberOfChapter = numberOfChapter;
     }
-    public Story(String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber) {
+    public Story(String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber, int numberOfChapter) {
         this.storyName = storyName;
         this.image = image;
         this.accountName = accountName;
         this.descrition = descrition;
         this.state = state;
         this.viewNumber = viewNumber;
+        this.numberOfChapter = numberOfChapter;
+    }
+
+    public int getNumberOfChapter() {
+        return numberOfChapter;
+    }
+
+    public void setNumberOfChapter(int numberOfChapter) {
+        this.numberOfChapter = numberOfChapter;
     }
 
     public int getStoryID() {
