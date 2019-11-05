@@ -12,8 +12,9 @@ public class Story {
     public boolean state;
     public int viewNumber;
     public int numberOfChapter;
+    public int rate;
 
-    public Story(int storyID, String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber,int numberOfChapter) {
+    public Story(int storyID, String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber,int numberOfChapter,int rate) {
         this.storyID = storyID;
         this.storyName = storyName;
         this.image = image;
@@ -22,8 +23,9 @@ public class Story {
         this.state = state;
         this.viewNumber = viewNumber;
         this.numberOfChapter = numberOfChapter;
+        this.rate = rate;
     }
-    public Story(String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber, int numberOfChapter) {
+    public Story(String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber, int numberOfChapter, int rate) {
         this.storyName = storyName;
         this.image = image;
         this.accountName = accountName;
@@ -31,6 +33,15 @@ public class Story {
         this.state = state;
         this.viewNumber = viewNumber;
         this.numberOfChapter = numberOfChapter;
+        this.rate = rate;
+    }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
     }
 
     public int getNumberOfChapter() {

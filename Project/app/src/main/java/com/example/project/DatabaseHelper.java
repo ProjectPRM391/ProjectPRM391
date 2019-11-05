@@ -253,7 +253,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     boolean state = res.getString(5) == "true" ? true : false ;
                     int viewNumber = res.getInt(6);
                     int number = getNumberOfChapterStory(storyId);
-                    Story story = new Story(storyId,storyName,image,accountName,descrition,state,viewNumber,number);
+                    int rate = getRateStory(storyId);
+                    Story story = new Story(storyId,storyName,image,accountName,descrition,state,viewNumber,number,rate);
                     listStory.add(story);
                     res.moveToNext();
                 }
@@ -271,7 +272,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try{
             String check = "";
             SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-            Cursor res = sqLiteDatabase.rawQuery( "select COUNT() from "+  TBALE_DETAIL_STORY  , null );
+            Cursor res = sqLiteDatabase.rawQuery( "select COUNT() from "+  TBALE_DETAIL_STORY  + " WHERE " + StoryID + " = " + storyId  , null );
             if(res.moveToFirst()){
                 number = res.getInt(0);
             }
@@ -282,5 +283,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return number;
     }
+
+    public int getRateStory(int storyId){
+        int number = 0;
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select COUNT() from "+  TBALE_RATE  + " WHERE " + StoryID + " = " + storyId  , null );
+            if(res.moveToFirst()){
+                number = res.getInt(2);
+            }
+
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return number;
+    }
+
+    /*public List<Customer> getAllListStory(List<Customer> listStory ){
+
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_CUSTOMER  , null );
+            if(res.moveToFirst()){
+                while(res.isAfterLast() == false) {
+                    int storyId = res.getInt(0);
+                    String storyName = res.getString(1);
+                    byte[] image  = res.getBlob(2);
+                    String accountName = res.getString(3);
+                    String descrition = res.getString(4);
+                    boolean state = res.getString(5) == "true" ? true : false ;
+                    int viewNumber = res.getInt(6);
+                    int number = getNumberOfChapterStory(storyId);
+                    int rate = getRateStory(storyId);
+                    Story story = new Story(storyId,storyName,image,accountName,descrition,state,viewNumber,number,rate);
+                    listStory.add(story);
+                    res.moveToNext();
+                }
+            }
+
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return listStory;
+    }*/
 
 }
