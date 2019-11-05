@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.util.List;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String LOG = "DatabaseHelper";
@@ -233,6 +235,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             log.LogI("Error",e.toString());
         }
         return false;
+    }
+
+    public List<Story> getAllListStory(List<Story> listStory ){
+
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_STORY  , null );
+            if(res.moveToFirst()){
+                while(res.isAfterLast() == false) {
+                    int storyId = res.getInt(0);
+                    String storyName = res.getString(1);
+                    byte[] image  = res.getBlob(2);
+                    String accountName = res.getString(3);
+                    String descrition = res.getString(4);
+                    boolean state = res.getString(5) == "true" ? true : false ;
+                    int viewNumber = res.getInt(6);
+                    Story story = new Story(storyId,storyName,image,accountName,descrition,state,viewNumber);
+                    listStory.add(story);
+                    res.moveToNext();
+                }
+            }
+
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return listStory;
     }
 
 }

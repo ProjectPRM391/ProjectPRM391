@@ -6,13 +6,13 @@ import android.media.Image;
 public class Story {
     public int storyID;
     public String storyName;
-    public String image;
+    public byte[] image;
     public String accountName;
     public String descrition;
     public boolean state;
     public int viewNumber;
 
-    public Story(int storyID, String storyName, String image, String accountName, String descrition, boolean state, int viewNumber) {
+    public Story(int storyID, String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber) {
         this.storyID = storyID;
         this.storyName = storyName;
         this.image = image;
@@ -21,7 +21,7 @@ public class Story {
         this.state = state;
         this.viewNumber = viewNumber;
     }
-    public Story(String storyName, String image, String accountName, String descrition, boolean state, int viewNumber) {
+    public Story(String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber) {
         this.storyName = storyName;
         this.image = image;
         this.accountName = accountName;
@@ -46,11 +46,11 @@ public class Story {
         this.storyName = storyName;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

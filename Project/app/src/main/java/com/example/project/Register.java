@@ -42,7 +42,7 @@ public class Register extends AppCompatActivity {
          Customer customer = new Customer(accountName,customerName,password,date,email,role);
 
          boolean check = false;
-         check = databaseHelper.checkAccountExist(accountName,password);
+         check = databaseHelper.checkAccountNameExist(accountName,password);
          if(check == true){
             databaseHelper.insertCustomer(customer);
             Intent intent = new Intent(this,Register.class);
