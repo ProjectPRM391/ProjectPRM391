@@ -75,6 +75,10 @@ public class PostActivity extends AppCompatActivity {
 
         pref = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE);
         accountName = pref.getString("accountname", "No name defined");
+        if(accountName.trim().equalsIgnoreCase("")){
+            Intent intent = new Intent(this, LoginForm.class);
+            startActivity(intent);
+        }
     }
 
     public void OnSelectImage(View view) {
@@ -124,7 +128,7 @@ public class PostActivity extends AppCompatActivity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            Intent intent = new Intent(PostActivity.this, LoginForm.class);
+                            Intent intent = new Intent(PostActivity.this, MyActivity.class);
                             startActivity(intent);
                         }})
                     .setNegativeButton(android.R.string.no, null).show();
