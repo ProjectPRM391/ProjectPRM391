@@ -26,8 +26,6 @@ import java.util.List;
 
 public class Home extends AppCompatActivity {
 
-    public static final String KEY_POSITION = "KEY_POSITION";
-
     CustomerListAdapter adapter;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -38,10 +36,12 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         getAllStory();
 
-        pref = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE);
-        Toast.makeText(this,pref.getString("accountname", "No name defined"),Toast.LENGTH_LONG).show();
+
+        //pref = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE);
+        //Toast.makeText(this,pref.getString("Hello " + "accountname", "No name defined"),Toast.LENGTH_LONG).show();
 
 
     }
@@ -94,6 +94,8 @@ public class Home extends AppCompatActivity {
         ListView dataList = (ListView) findViewById(R.id.listView);
         dataList.setAdapter(adapter);
 
+
+
 /*        dataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -144,7 +146,7 @@ public class Home extends AppCompatActivity {
     }
 
     public void getAllStory(){
-       ArrayList<Story> imageArry = new ArrayList<Story>();
+       final ArrayList<Story> imageArry = new ArrayList<Story>();
        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
        // get image from drawable
        Bitmap images = BitmapFactory.decodeResource(getResources(),
@@ -163,18 +165,27 @@ public class Home extends AppCompatActivity {
        adapter = new CustomerListAdapter(this, imageArry);
        ListView dataList = (ListView) findViewById(R.id.listView);
        dataList.setAdapter(adapter);
-       dataList.setClickable(true);
+
+        dataList.setClickable(true);
         dataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                 startNewActivity();
+
+                Story story = imageArry.get(i);
+                startNewActivity(story);
             }
         });
     }
 
-    private void startNewActivity() {
-        Intent intent = new Intent(Home.this, ListCustomer.class);
-        startActivity(intent);
+    private void startNewActivity(Story story) {
+        Toast.makeText(this,story.getStoryID(),Toast.LENGTH_LONG).show();
+        Integer storyId = story.getStoryID();
+
+        editor.putString("storyId",story.toString());
+        editor.commit();
+
+        //Intent intent = new Intent(Home.this, MyActivity.class);
+        //startActivity(intent);
     }
     public void getSearchStory(String name){
         ArrayList<Story> imageArry = new ArrayList<Story>();

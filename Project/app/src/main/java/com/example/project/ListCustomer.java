@@ -5,14 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -22,12 +27,17 @@ public class ListCustomer extends AppCompatActivity {
 
 
     StoryListAdapter adapter;
+    SharedPreferences pref;
+    String MY_PREFS_NAME = "Customer";
+    SharedPreferences.Editor editor;
+    String accountName;
 
     @SuppressLint("WrongThread")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_customer);
+        editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         getAllCustomer();
 
     }
@@ -99,7 +109,7 @@ public class ListCustomer extends AppCompatActivity {
 
     public void getAllCustomer()
     {
-        ArrayList<Customer> imageArry = new ArrayList<Customer>();
+        final ArrayList<Customer> imageArry = new ArrayList<Customer>();
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         // get image from drawable
         Bitmap images = BitmapFactory.decodeResource(getResources(),
@@ -118,6 +128,26 @@ public class ListCustomer extends AppCompatActivity {
         adapter = new StoryListAdapter(this,imageArry);
         ListView dataList = (ListView) findViewById(R.id.list_view2);
         dataList.setAdapter(adapter);
+
+        dataList.setClickable(true);
+        dataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Customer customer = imageArry.get(i);
+                startNewActivity(customer);
+            }
+        });
+    }
+    private void startNewActivity(Customer customer) {
+        Toast.makeText(this,customer.getAccountName(),Toast.LENGTH_LONG).show();
+        String accountName = customer.getAccountName();
+
+        editor.putString("accountName12",customer.getAccountName());
+        editor.commit();
+
+        Intent intent = new Intent(ListCustomer.this, CustomerProfile.class);
+        startActivity(intent);
     }
 
     public void getSearchCustomer(String name)

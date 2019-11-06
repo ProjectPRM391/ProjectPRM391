@@ -1,5 +1,7 @@
 package com.example.project;
 
+import android.widget.Spinner;
+
 import java.util.Date;
 
 public class Customer {
@@ -9,6 +11,7 @@ public class Customer {
     public String date;
     public String email;
     public String role;
+    private Spinner category;
 
     public Customer(String accountName, String customerName, String password, String date, String email, String role) {
         this.accountName = accountName;

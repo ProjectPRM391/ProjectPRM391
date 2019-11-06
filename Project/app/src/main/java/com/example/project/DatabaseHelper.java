@@ -460,4 +460,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor res1 = sqLiteDatabase.rawQuery( "delete from "+  TBALE_STORY +" WHERE "+StoryID+" = "+id  , null );
         Cursor res2 = sqLiteDatabase.rawQuery( "delete from "+  TBALE_STORY_CATEGORY +" WHERE "+StoryID+" = "+id  , null );
     }
+    public Customer getCustomerByAccountName(String name){
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_CUSTOMER +" WHERE "+ AccountName + " ='" + name + "'"  , null );
+            if(res.moveToFirst()){
+                while(res.isAfterLast() == false) {
+                    String accountName = res.getString(0);
+                    String customerName = res.getString(1);
+                    String password  = res.getString(2);
+                    String date = res.getString(3);
+                    String email =  res.getString(4);
+                    String role = res.getString(5);
+                    Customer customer = new Customer(accountName,customerName,password,date,email,role);
+                    return customer;
+                }
+            }
+
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return null;
+    }
+
+    public List<Story> getStoryByAccountName(List<Story>  listStory, String s){
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select * from " + TBALE_STORY + " WHERE " + AccountName + " ='" + s + "'", null );
+            if(res.moveToFirst()){
+                while(res.isAfterLast() == false) {
+                    int storyId = res.getInt(0);
+                    String storyName = res.getString(1);
+                    byte[] image  = res.getBlob(2);
+                    String accountName = res.getString(3);
+                    String descrition = res.getString(4);
+                    boolean state = res.getString(5) == "true" ? true : false ;
+                    int viewNumber = res.getInt(6);
+                    int number = getNumberOfChapterStory(storyId);
+                    int rate = getRateStory(storyId);
+                    Story story = new Story(storyId,storyName,image,accountName,descrition,state,viewNumber,number,rate);
+                    listStory.add(story);
+                    res.moveToNext();
+                }
+            }
+
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return listStory;
+    }
 }
