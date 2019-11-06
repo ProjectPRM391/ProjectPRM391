@@ -24,6 +24,17 @@ public class Story {
         this.numberOfChapter = numberOfChapter;
         this.rate = rate;
     }
+
+    public Story(String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber) {
+        this.storyID = storyID;
+        this.storyName = storyName;
+        this.image = image;
+        this.accountName = accountName;
+        this.descrition = descrition;
+        this.state = state;
+        this.viewNumber = viewNumber;
+    }
+
     public Story(String storyName, byte[] image, String accountName, String descrition, boolean state, int viewNumber, int numberOfChapter, int rate) {
         this.storyName = storyName;
         this.image = image;

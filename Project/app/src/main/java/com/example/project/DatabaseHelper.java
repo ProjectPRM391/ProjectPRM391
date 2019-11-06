@@ -111,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // dat cac gia tri cua student can them cho bien values
         ContentValues values = new ContentValues();
         values.put(StoryName, story.getStoryName());
-        values.put(Image, story.getImage().toString());
+        values.put(Image, story.getImage());
         values.put(AccountName, story.getAccountName());
         values.put(Description, story.getDescrition());
         values.put(State, story.isState());
@@ -453,5 +453,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             log.LogI("Error",e.toString());
         }
         return listStory;
+    }
+
+    public void deleteStoryById(String id){
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor res1 = sqLiteDatabase.rawQuery( "delete from "+  TBALE_STORY +" WHERE "+StoryID+" = "+id  , null );
+        Cursor res2 = sqLiteDatabase.rawQuery( "delete from "+  TBALE_STORY_CATEGORY +" WHERE "+StoryID+" = "+id  , null );
     }
 }

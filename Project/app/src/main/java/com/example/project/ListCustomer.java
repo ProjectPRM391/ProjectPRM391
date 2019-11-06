@@ -1,8 +1,10 @@
 package com.example.project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ public class ListCustomer extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
+        inflater.inflate(R.menu.admin_menu, menu);
 
         MenuItem item = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) item.getActionView();
@@ -47,10 +50,51 @@ public class ListCustomer extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
+                if(s.trim().equalsIgnoreCase("")){
+                    getAllCustomer();
+                }
                 return false;
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_user)
+        {
+            Intent intent = new Intent(ListCustomer.this,
+                    ListCustomer.class);
+            startActivity(intent);
+            return false;
+        }
+
+        if(id == R.id.action_story)
+        {
+            Intent intent = new Intent(ListCustomer.this,
+                    ListStoryAdmin.class);
+            startActivity(intent);
+            return false;
+        }
+
+        if(id == R.id.action_login)
+        {
+            Intent intent = new Intent(ListCustomer.this,
+                    LoginForm.class);
+            startActivity(intent);
+            return false;
+        }
+
+        if(id == R.id.action_logout)
+        {
+            Intent intent = new Intent(ListCustomer.this,
+                    Home.class);
+            startActivity(intent);
+            return false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void getAllCustomer()

@@ -1,8 +1,10 @@
 package com.example.project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -48,6 +50,7 @@ public class Home extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
+        inflater.inflate(R.menu.main_menu, menu);
 
         MenuItem item = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) item.getActionView();
@@ -61,6 +64,9 @@ public class Home extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
+                if(s.trim().equalsIgnoreCase("")){
+                    getAllStory();
+                }
                 return false;
             }
         });
@@ -98,6 +104,44 @@ public class Home extends AppCompatActivity {
     }
 
 
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_post)
+        {
+            Intent intent = new Intent(Home.this,
+                    PostActivity.class);
+            startActivity(intent);
+            return false;
+        }
+
+        if(id == R.id.action_home)
+        {
+            Intent intent = new Intent(Home.this,
+                    Home.class);
+            startActivity(intent);
+            return false;
+        }
+
+        if(id == R.id.action_login)
+        {
+            Intent intent = new Intent(Home.this,
+                    LoginForm.class);
+            startActivity(intent);
+            return false;
+        }
+
+        if(id == R.id.action_logout)
+        {
+            Intent intent = new Intent(Home.this,
+                    Home.class);
+            startActivity(intent);
+            return false;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public void getAllStory(){
        ArrayList<Story> imageArry = new ArrayList<Story>();
