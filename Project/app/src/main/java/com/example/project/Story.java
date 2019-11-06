@@ -39,10 +39,6 @@ public class Story {
         this.numberOfChapter = numberOfStory;
     }
 
-    public Story(String storyName, int numberOfChapter) {
-        this.storyName = storyName;
-        this.numberOfChapter = numberOfChapter;
-    }
 
     public int getRate() {
         return rate;

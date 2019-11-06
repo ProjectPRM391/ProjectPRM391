@@ -159,7 +159,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         database.insert(TBALE_STORY_CATEGORY, null, values);
     }
 
-    public void insertDetailStory(DetailStory detailStory) {
+    public long insertDetailStory(DetailStory detailStory) {
         // cap quyen ghi CSDL cho bien database
         SQLiteDatabase database = this.getWritableDatabase();
 
@@ -170,7 +170,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ChapterName, detailStory.getChapterName());
         values.put(Content, detailStory.getContent());
         // them vao CSDL
-        database.insert(TBALE_DETAIL_STORY, null, values);
+        long result = database.insert(TBALE_DETAIL_STORY, null, values);
+        return  result;
     }
     public DatabaseHelper(@Nullable Context context) {
         super(context, DB_Name, null, DB_VERSION);
@@ -288,9 +289,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try{
             String check = "";
             SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-            Cursor res = sqLiteDatabase.rawQuery( "select COUNT() from "+  TBALE_RATE  + " WHERE " + StoryID + " = " + storyId  , null );
+            Cursor res = sqLiteDatabase.rawQuery( "select AVG(Rate) from "+  TBALE_RATE  + " WHERE " + StoryID + " = " + storyId  , null );
             if(res.moveToFirst()){
-                number = res.getInt(2);
+                number = res.getInt(0);
             }
 
         }catch(Exception e){

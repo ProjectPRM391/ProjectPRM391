@@ -12,6 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="19dp"
         android:layout_marginTop="24dp"
+        android:onClick="detailClick"
         tools:srcCompat="@tools:sample/avatars[0]" />
 
     <TextView

@@ -59,7 +59,9 @@ public class CustomerListAdapter extends BaseAdapter {
         Story story = this.listData.get(i);
         holder.storyName.setText(story.getStoryName());
         holder.chapterNumber.setText(String.valueOf(story.getNumberOfChapter()));
-        holder.ratingBar.setRating((float) story.getRate()/2);
+        int rate = story.getRate();
+        holder.ratingBar.setRating(Float.parseFloat(String.valueOf(rate/2)));
+
 
         byte[] outImage=story.getImage();
         ByteArrayInputStream imageStream = new ByteArrayInputStream(outImage);
