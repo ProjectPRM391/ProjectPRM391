@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingLeft="5dp"
+              android:id="@+id/ln_story">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="false"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_content_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Chương 1: Phần dẫn 1&amp;2"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="22dp" />
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:paddingBottom="10dp"
+                android:text="Cậu con trai hỏi bố:
+
+– Tại sao đầu của bố không có tóc?
+
+– Vì bố hoạt động về trí óc, da đầu rung rinh nên tóc không mọc được.
+
+– A, bây giờ thì con đã hiểu tại sao mà miệng mẹ không có râu.
+
+– !?!"
+                android:textColor="@android:color/black"
+                android:textSize="22dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

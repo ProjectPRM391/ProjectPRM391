@@ -6,14 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-
+    private ArrayList<ItemStory> itemStories = new ArrayList<>();
     public static final String LOG = "DatabaseHelper";
 
     public static final String DB_Name = "StoryDatabase";
@@ -62,7 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String CREATE_TABLE_CUSTOMER = "CREATE TABLE " + TBALE_CUSTOMER + " ("
-            + AccountName + " TEXT , " + CustomerName + " TEXT, " + Password + " TEXT, "
+            + AccountName + " openDatabase , " + CustomerName + " TEXT, " + Password + " TEXT, "
             + DOB + " TEXT, " + Email + " TEXT, " + Role + " TEXT) ";
 
     private static final String CREATE_TABLE_STORY = "CREATE TABLE " + TBALE_STORY + " ("
@@ -185,7 +185,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(CREATE_TABLE_CATEGORY);
         sqLiteDatabase.execSQL(CREATE_TABLE_DETAIL_STORY);
         Log.i(null,"Success");
-
     }
 
     @Override
@@ -399,4 +398,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return list;
     }
+    public ArrayList<ItemStory> getData() {
+        try {
+            itemStories.clear();
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TBALE_DETAIL_STORY, null);
+            if (cursor == null) {
+                return null;
+            }
+            int indexTitle = cursor.getColumnIndex("ChapterName");
+            int indexContent = cursor.getColumnIndex("Content");
+            String title, content;
+            cursor.moveToNext();
+            while (!cursor.isAfterLast()) {
+                title = cursor.getString(indexTitle);
+                content = cursor.getString(indexContent);
+                itemStories.add(new ItemStory(title, content));
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+            return itemStories;
+        }catch (Exception e) {
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return null;
+    }
+
 }

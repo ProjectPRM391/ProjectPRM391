@@ -1,8 +1,5 @@
 package com.example.project;
 
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-
 public class Story {
     public int storyID;
     public String storyName;
@@ -40,6 +37,11 @@ public class Story {
     public Story(String storyName, int numberOfStory){
         this.storyName = storyName ;
         this.numberOfChapter = numberOfStory;
+    }
+
+    public Story(String storyName, int numberOfChapter) {
+        this.storyName = storyName;
+        this.numberOfChapter = numberOfChapter;
     }
 
     public int getRate() {
