@@ -9,7 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListCustomer"></activity>
+        <activity android:name=".ChapterActivity">
+
+        </activity>
+        <activity android:name=".PostActivity">
+
+        </activity>
+        <activity android:name=".ListCustomer" />
         <activity android:name=".Home" />
         <activity android:name=".Register" />
         <activity android:name=".LoginForm">

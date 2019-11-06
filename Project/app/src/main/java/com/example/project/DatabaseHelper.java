@@ -376,4 +376,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return false;
     }
+
+    public List<Category> getAllCategory(List<Category> list){
+
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_CATEGORY, null );
+            if(res.moveToFirst()){
+                while(res.isAfterLast() == false) {
+                    int categoryID = res.getInt(0);
+                    String categoryName = res.getString(1);
+                    Category category = new Category(categoryID, categoryName);
+                    list.add(category);
+                    res.moveToNext();
+                }
+            }
+
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return list;
+    }
 }

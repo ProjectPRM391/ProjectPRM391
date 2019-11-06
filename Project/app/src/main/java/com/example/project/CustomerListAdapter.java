@@ -75,8 +75,6 @@ public class CustomerListAdapter extends BaseAdapter {
         return convertView;
     }
 
-
-
     static class ViewHolder {
         ImageView imageStory;
         TextView storyName;
