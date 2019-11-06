@@ -332,7 +332,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try{
             String check = "";
             SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-            Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_STORY +" WHERE "+StoryName+" = '"+s+"'" , null );
+            Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_STORY +" WHERE "+StoryName+" LIKE '%"+s+"%'" , null );
             if(res.moveToFirst()){
                 while(res.isAfterLast() == false) {
                     int storyId = res.getInt(0);
@@ -426,4 +426,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+
+    public List<Customer> getCustomerByName(List<Customer> listStory, String name ){
+
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_CUSTOMER +" WHERE "+CustomerName+" LIKE '%"+name+"%'"  , null );
+            if(res.moveToFirst()){
+                while(res.isAfterLast() == false) {
+                    String accountName = res.getString(0);
+                    String customerName = res.getString(1);
+                    String password  = res.getString(2);
+                    String date = res.getString(3);
+                    String email =  res.getString(4);
+                    String role = res.getString(5);
+                    Customer customer = new Customer(accountName,customerName,password,date,email,role);
+                    listStory.add(customer);
+                    res.moveToNext();
+                }
+            }
+
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return listStory;
+    }
 }
