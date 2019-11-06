@@ -47,6 +47,7 @@ public class PostActivity extends AppCompatActivity {
     String MY_PREFS_NAME = "Customer";
     String accountName;
     Integer categoryid;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +97,7 @@ public class PostActivity extends AppCompatActivity {
         {
             filePath = data.getData();
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
             }
             catch (IOException e)
@@ -116,7 +117,7 @@ public class PostActivity extends AppCompatActivity {
             story.setAccountName(accountName);
             story.setStoryName(storyname);
             story.setDescrition(description);
-            story.setImage(ByteBuffer.allocate(4).putInt(R.mipmap.image).array());
+            story.setImage(getBitmapAsByteArray(bitmap));
             dh.insertStory(story);
 
             List<Story> stories = new ArrayList<>();
@@ -135,6 +136,12 @@ public class PostActivity extends AppCompatActivity {
         }
         catch (Exception e){
         }
+    }
+
+    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
     }
 
     @Override
