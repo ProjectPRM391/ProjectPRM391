@@ -88,7 +88,7 @@ public class Home extends AppCompatActivity {
         ListView dataList = (ListView) findViewById(R.id.listView);
         dataList.setAdapter(adapter);
 
-        /*dataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+/*        dataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(Home.this,ListCustomer.class);
@@ -119,6 +119,7 @@ public class Home extends AppCompatActivity {
        adapter = new CustomerListAdapter(this, imageArry);
        ListView dataList = (ListView) findViewById(R.id.listView);
        dataList.setAdapter(adapter);
+       dataList.setClickable(true);
         dataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -128,7 +129,7 @@ public class Home extends AppCompatActivity {
     }
 
     private void startNewActivity() {
-        Intent intent = new Intent(this, ListCustomer.class);
+        Intent intent = new Intent(Home.this, ListCustomer.class);
         startActivity(intent);
     }
     public void getSearchStory(String name){
