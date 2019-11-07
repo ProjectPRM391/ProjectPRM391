@@ -36,6 +36,7 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
         editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         getAllStory();
 
@@ -96,7 +97,7 @@ public class Home extends AppCompatActivity {
 
 
 
-/*        dataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        dataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(Home.this,ListCustomer.class);
@@ -137,6 +138,8 @@ public class Home extends AppCompatActivity {
 
         if(id == R.id.action_logout)
         {
+            editor.remove("accountname");
+            editor.commit();
             Intent intent = new Intent(Home.this,
                     Home.class);
             startActivity(intent);

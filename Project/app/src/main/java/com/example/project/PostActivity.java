@@ -42,6 +42,7 @@ public class PostActivity extends AppCompatActivity {
     TextView storyName;
     TextView desciption;
     HashMap<Integer,String> spinnerMap;
+    public static final String storyId = "";
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     String MY_PREFS_NAME = "Customer";
@@ -57,6 +58,7 @@ public class PostActivity extends AppCompatActivity {
         imageView = findViewById(R.id.story_image);
 
         category = findViewById(R.id.category_list);
+        editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
 
         List<Category> categories = new ArrayList<>();
         DatabaseHelper dh = new DatabaseHelper(getApplicationContext());
@@ -76,7 +78,7 @@ public class PostActivity extends AppCompatActivity {
 
         pref = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE);
         accountName = pref.getString("accountname", "No name defined");
-        if(accountName.trim().equalsIgnoreCase("")){
+        if(accountName.trim().equalsIgnoreCase("No name defined")){
             Intent intent = new Intent(this, LoginForm.class);
             startActivity(intent);
         }
@@ -117,7 +119,18 @@ public class PostActivity extends AppCompatActivity {
             story.setAccountName(accountName);
             story.setStoryName(storyname);
             story.setDescrition(description);
-            story.setImage(getBitmapAsByteArray(bitmap));
+            if(bitmap == null){
+                new AlertDialog.Builder(this)
+                        .setTitle("Title")
+                        .setMessage("Please enter your image !!!")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setNegativeButton(android.R.string.cancel, null).show();
+                return;
+            }
+            else {
+                story.setImage(getBitmapAsByteArray(bitmap));
+            }
+            //story.setImage(getBitmapAsByteArray(bitmap));
             dh.insertStory(story);
 
             List<Story> stories = new ArrayList<>();
@@ -129,12 +142,16 @@ public class PostActivity extends AppCompatActivity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            Intent intent = new Intent(PostActivity.this, MyActivity.class);
+                            DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                            Integer storyId2 = db.getStoryByName(storyName.getText().toString()).getStoryID() -1;
+                            Intent intent = new Intent(PostActivity.this, ShowStory.class);
+                            intent.putExtra(storyId, storyId2.toString());
                             startActivity(intent);
                         }})
                     .setNegativeButton(android.R.string.no, null).show();
         }
         catch (Exception e){
+            Toast.makeText(PostActivity.this,e.toString(),Toast.LENGTH_LONG).show();
         }
     }
 
@@ -181,6 +198,8 @@ public class PostActivity extends AppCompatActivity {
 
         if(id == R.id.action_logout)
         {
+            editor.remove("accountname");
+            editor.commit();
             Intent intent = new Intent(PostActivity.this,
                     Home.class);
             startActivity(intent);

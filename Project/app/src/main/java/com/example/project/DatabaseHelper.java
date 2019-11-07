@@ -357,6 +357,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return listStory;
     }
+    public Story getStoryByName(String s){
+
+        try{
+            String check = "";
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor res = sqLiteDatabase.rawQuery( "select * from "+  TBALE_STORY +" WHERE "+StoryName+ "='"+s+"'" , null );
+            if(res.moveToFirst()){
+                while(res.isAfterLast() == false) {
+                    int storyId = res.getInt(0);
+                    String storyName = res.getString(1);
+                    byte[] image  = res.getBlob(2);
+                    String accountName = res.getString(3);
+                    String descrition = res.getString(4);
+                    boolean state = res.getString(5) == "true" ? true : false ;
+                    int viewNumber = res.getInt(6);
+                    int number = getNumberOfChapterStory(storyId);
+                    int rate = getRateStory(storyId);
+                    Story story = new Story(storyId,storyName,image,accountName,descrition,state,viewNumber,number,rate);
+                    return  story;
+                }
+            }
+
+        }catch(Exception e){
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return null;
+    }
 
     public  boolean isAdminOrNot(String accountName){
         try{

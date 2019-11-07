@@ -16,6 +16,7 @@ public class ShowStory extends AppCompatActivity {
     DatabaseHelper  databaseHelper;
     List<Story> storyList;
     public static final String dataName = "";
+    public String storyId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,12 +25,14 @@ public class ShowStory extends AppCompatActivity {
 
     }
     private void initView() {
+        Intent intent = getIntent();
+        storyId = intent.getStringExtra(PostActivity.storyId);
         databaseHelper = new DatabaseHelper(getApplicationContext());
         storyList = databaseHelper.getStory();
         final TextView textTitle = (TextView) findViewById(R.id.txtTitle);
         TextView txtDescription = (TextView) findViewById(R.id.txtDescription);
-        textTitle.setText(storyList.get(0).getStoryName());
-        txtDescription.setText(storyList.get(0).getDescrition());
+        textTitle.setText(storyList.get(Integer.parseInt(storyId)).getStoryName());
+        txtDescription.setText(storyList.get(Integer.parseInt(storyId)).getDescrition());
         button = (Button) findViewById(R.id.btnRead);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

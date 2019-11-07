@@ -73,6 +73,8 @@ public class LoginForm extends AppCompatActivity {
 
         if(id == R.id.action_logout)
         {
+            editor.remove("accountname");
+            editor.commit();
             Intent intent = new Intent(LoginForm.this,
                     Home.class);
             startActivity(intent);

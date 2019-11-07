@@ -3,11 +3,15 @@ package com.example.project;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,7 +22,11 @@ import java.util.List;
 
 public class ListStoryAdmin extends AppCompatActivity {
 
-    private ListView listView;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+    String MY_PREFS_NAME = "Customer";
+
+    @SuppressLint("WrongThread")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +39,7 @@ public class ListStoryAdmin extends AppCompatActivity {
             stories.add(s);
         }
 
-        listView = (ListView) findViewById(R.id.lv_mystory);
+        ListView listView = (ListView) findViewById(R.id.lv_mystory);
         listView.setAdapter(new CustomeListStoryAdmin(stories,this));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -40,6 +48,7 @@ public class ListStoryAdmin extends AppCompatActivity {
             }
         });
 
+        editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
     }
     public void deleteItem(int position) {
         Toast.makeText(this,"item " + position,Toast.LENGTH_LONG).show();
@@ -82,6 +91,8 @@ public class ListStoryAdmin extends AppCompatActivity {
 
         if(id == R.id.action_logout)
         {
+            editor.remove("accountname");
+            editor.commit();
             Intent intent = new Intent(ListStoryAdmin.this,
                     Home.class);
             startActivity(intent);
