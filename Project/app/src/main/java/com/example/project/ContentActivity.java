@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -23,6 +24,7 @@ public class ContentActivity extends Activity implements AdapterView.OnItemClick
     private ListView lvMenu;
     private ImageView ivMenu;
     private TitleAdapter titleAdapter;
+    private String titleProject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,7 @@ public class ContentActivity extends Activity implements AdapterView.OnItemClick
         setContentView(R.layout.content);
         Intent intent = getIntent();
         mPosition = intent.getIntExtra(MyActivity.KEY_POSITION, 0);
+        titleProject = intent.getStringExtra(MyActivity.setData);
         initView();
     }
 
@@ -38,7 +41,8 @@ public class ContentActivity extends Activity implements AdapterView.OnItemClick
         //viewPager = (ViewPager) findViewById(R.id.view_pager);
         lvMenu = (ListView) findViewById(R.id.lv_menu);
         ivMenu = (ImageView) findViewById(R.id.iv_menu);
-
+        TextView textView = (TextView) findViewById(R.id.txtTitleProject);
+        textView.setText(titleProject);
         titleAdapter = new TitleAdapter(this);
         lvMenu.setAdapter(titleAdapter);
 

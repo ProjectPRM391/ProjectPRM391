@@ -21,7 +21,7 @@ public class ContentPagerAdapter extends PagerAdapter {
         this.mContext = context;
         inflater = LayoutInflater.from(context);
         dbManager = new DatabaseHelper(context);
-        itemStories = dbManager.getData();
+        itemStories = dbManager.getListChapter();
     }
 
     @Override

@@ -9,42 +9,40 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListStoryAdmin extends AppCompatActivity {
 
+    private ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_story_admin);
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        ArrayList<Story> stories = new ArrayList<>();
+        List<Story> storyList = new ArrayList<Story>();
+        storyList = databaseHelper.getAllListStory(storyList);
+        for(Story s : storyList){
+            stories.add(s);
+        }
 
+        listView = (ListView) findViewById(R.id.lv_mystory);
+        listView.setAdapter(new CustomeListStoryAdmin(stories,this));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                deleteItem(position);
+            }
+        });
 
-        List<Story> storyList = new ArrayList<>();
-        storyList = getListStory();
-        final ListView listView = findViewById(R.id.lv_mystory);
-        listView.setAdapter(new CustomeListStoryAdmin(storyList,this));
     }
-    private List<Story> getListStory(){
-        List<Story> list = new ArrayList<Story>();
-        Story s1 = new Story("How to study smart", 2);
-        Story s2 = new Story("Poison Killer", 1);
-        Story s3 = new Story("Very Nice", 3);
-        Story s4 = new Story("Very Nice", 3);
-        Story s5 = new Story("Very Nice", 3);
-        Story s6 = new Story("Very Nice", 3);
-        Story s7 = new Story("Very Nice", 3);
-
-        list.add(s1);
-        list.add(s2);
-        list.add(s3);
-        list.add(s4);
-        list.add(s5);
-        list.add(s6);
-        list.add(s7);
-
-        return list;
+    public void deleteItem(int position) {
+        Toast.makeText(this,"item " + position,Toast.LENGTH_LONG).show();
     }
 
     @Override

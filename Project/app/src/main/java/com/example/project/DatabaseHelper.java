@@ -111,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // dat cac gia tri cua student can them cho bien values
         ContentValues values = new ContentValues();
         values.put(StoryName, story.getStoryName());
-        values.put(Image, story.getImage());
+        values.put(Image, story.getImageName());
         values.put(AccountName, story.getAccountName());
         values.put(Description, story.getDescrition());
         values.put(State, story.isState());
@@ -399,7 +399,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return list;
     }
-    public ArrayList<ItemStory> getData() {
+    public List<Story> getStory() {
+        ArrayList<Story> listItem = new ArrayList<>();
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TBALE_STORY, null);
+            if (cursor == null) {
+                return null;
+            }
+            int indexTitle = cursor.getColumnIndex("StoryName");
+            int indexContent = cursor.getColumnIndex("Description");
+            String title, content;
+            cursor.moveToNext();
+            while (!cursor.isAfterLast()) {
+                title = cursor.getString(indexTitle);
+                content = cursor.getString(indexContent);
+                listItem.add(new Story(title, content));
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+            return listItem;
+        } catch (Exception e) {
+            LogUtil log = new LogUtil();
+            log.LogI("Error",e.toString());
+        }
+        return null;
+    }
+    public ArrayList<ItemStory> getListChapter() {
         try {
             itemStories.clear();
             SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();

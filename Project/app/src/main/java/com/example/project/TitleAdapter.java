@@ -21,7 +21,7 @@ public class TitleAdapter extends BaseAdapter {
     }
 
     private void initData() {
-        itemStories = dbmgr.getData();
+        itemStories = dbmgr.getListChapter();
     }
 
     @Override

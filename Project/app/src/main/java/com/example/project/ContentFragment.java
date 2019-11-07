@@ -37,7 +37,7 @@ public class ContentFragment extends Fragment {
         tvTitle = (TextView) rootView.findViewById(R.id.tv_content_title);
         tvContent = (TextView) rootView.findViewById(R.id.tv_content);
         dbManager = new DatabaseHelper(getActivity());
-        itemStories = dbManager.getData();
+        itemStories = dbManager.getListChapter();
 
     }
 

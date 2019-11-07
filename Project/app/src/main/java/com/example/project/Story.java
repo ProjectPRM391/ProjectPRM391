@@ -4,6 +4,7 @@ public class Story {
     public int storyID;
     public String storyName;
     public byte[] image;
+    public String imageName;
     public String accountName;
     public String descrition;
     public boolean state;
@@ -45,11 +46,32 @@ public class Story {
         this.numberOfChapter = numberOfChapter;
         this.rate = rate;
     }
-    public Story(String storyName, int numberOfStory){
-        this.storyName = storyName ;
-        this.numberOfChapter = numberOfStory;
+
+    public Story(String storyName, int numberOfChapter) {
+        this.storyName = storyName;
+        this.numberOfChapter = numberOfChapter;
+    }
+    public Story(String storyName, String descrition) {
+        this.storyName = storyName;
+        this.descrition = descrition;
     }
 
+    public Story(String aaaa, String image, String lam, String bbbb, boolean b, int i) {
+        this.storyName = aaaa;
+        this.imageName = image;
+        this.accountName = lam;
+        this.descrition = bbbb;
+        this.state = b;
+        this.viewNumber = i;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
 
     public int getRate() {
         return rate;
